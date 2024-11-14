@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <title>Welcome to the App</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the App</h1>
+        <p>Your gateway to an amazing experience.</p>
+        <div class="buttons">
+            <a href="/signup" class="btn"><i class='bx bx-user-plus'></i> Sign Up</a>
+            <a href="/login" class="btn"><i class='bx bx-log-in'></i> Login</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>

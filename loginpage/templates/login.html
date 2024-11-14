@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <title>Login</title>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>YourLogo</h1>
+            </div>
+            <div class="contact-info">
+                <p>Contact: 6381687588</p>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <div class="input-group">
+                <i class='bx bx-key'></i>
+                <input type="text" name="app_id" placeholder="Enter App ID" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        {% if app_id %}
+        <p>Your App ID is: <strong>{{ app_id }}</strong></p>
+        {% endif %}
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>Address: Your Address Here</p>
+                <p>Email: <a href="mailto:16gomathimsc@gmail.com">16gomathimsc@gmail.com</a></p>
+                <p>Contact No: 6381687588</p>
+            </div>
+            <div class="footer-middle">
+                <p>Error In Logi: {% if error %} {{ error }} {% endif %}</p>
+                <p>Contact Us: <a href="mailto:16gomathimsc@gmail.com" class="btn">Email Us</a></p>
+            </div>
+            <div class="footer-right">
+                <p>Why Choose Us?</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
