@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        input[type="file"] {
+            margin: 1rem 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #ecf0f1;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            white-space: pre-wrap; /* Preserve formatting */
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px; 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #chart-container {
+            margin: 2rem 0;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+            margin: 0 auto; /* Center the map container */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plant Disease Detection</h1>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Upload Image</button>
+        </form>
+        <div id="result"></div>
+        <div id="chart-container">
+            <!-- Placeholder for graph -->
+            <canvas id="diseaseChart"></canvas>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Welcome to Plant Disease Detection</h2>
+            <p>This application helps you identify and treat plant diseases.</p>
+        </div>
+    </div>
+
+    <!-- Include markdown-it library -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize markdown-it
+        const md = window.markdownit();
+
+        // Handle form submission
+        document.getElementById('upload-form').onsubmit = async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            const response = await fetch('/detect', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            // Convert Markdown to HTML and display it
+            document.getElementById('result').innerHTML = md.render(result.result || result.error);
+        };
+
+        // Modal script
+        const modal = document.getElementById("welcomeModal");
+        const span = document.getElementsByClassName("close")[0];
+
+        window.onload = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Initialize Chart.js
+        const ctx = document.getElementById('diseaseChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Downy mildew', 'Powdery mildew', 'Potato virus X'],
+                datasets: [{
+                    label: 'Number of Cases',
+                    data: [50, 70, 60],
+                    backgroundColor: ['#ff9999', '#66b3ff', '#99ff99']
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+</body>
+</html>
